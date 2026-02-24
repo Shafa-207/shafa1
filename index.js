@@ -29,4 +29,8 @@ app.get("/login/:name", (req, res) => {
   res.send(`Welcome Back ${name}!!`);
 });
 
+app.get("/coba", (req, res) => {
+  res.status(401).send("Error nya 401!!!");
+});
+
 app.listen(3000);
