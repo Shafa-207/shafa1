@@ -16,12 +16,17 @@ app.use((err, req, res, next) => {
 });
 
 app.get("/", (req, res) => {
-  res.send("Hello Kamu");
+  res.send("Hello nama saya shafa!");
 });
 
 app.get("/say/:greeting", (req, res) => {
   const { greeting } = req.params;
   res.send(greeting);
+});
+
+app.get("/login/:name", (req, res) => {
+  const { name } = req.params;
+  res.send(`Welcome Back ${name}!!`);
 });
 
 app.listen(3000);
