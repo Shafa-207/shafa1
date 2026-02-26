@@ -1,36 +1,57 @@
 import express from "express";
+import noteRouter from "./routes/note.js";
+
+import mongoose from "mongoose";
+import { Post } from "./models/index.js";
 
 // const express = require("express");
 const app = express();
+app.use(express.json());
+app.use("/notes", noteRouter);
 
-app.use((req, res, next) => {
-  if (false) {
-    next(new Error("salah"));
-    return;
-  }
-  next();
+const password = "shafapassword";
+const url = `mongodb+srv://shafa_db_user:${password}@shafa-cluster0.ovodjwg.mongodb.net/?appName=Shafa-Cluster0`;
+mongoose
+  .connect(url)
+  .then(() => console.log("Terhubung ke MongoDB..."))
+  .catch((err) => console.error("Gagal koneksi:", err));
+
+app.listen(3000, () => {
+  console.log("Server jalan di http:localhost:3000");
 });
 
-app.use((err, req, res, next) => {
-  res.send("Error Occurred");
-});
+// Post sekarang tersedia untuk digunakan
 
-app.get("/", (req, res) => {
-  res.send("Hello nama saya shafa!");
-});
+// app.use((req, res, next) => {
+//   if (false) {
+//     next(new Error("salah"));
+//     return;
+//   }
+//   next();
+// });
 
-app.get("/say/:greeting", (req, res) => {
-  const { greeting } = req.params;
-  res.send(greeting);
-});
+// app.use((err, req, res, next) => {
+//   res.send("Error Occurred");
+// });
 
-app.get("/login/:name", (req, res) => {
-  const { name } = req.params;
-  res.send(`Welcome Back ${name}!!`);
-});
+// app.get("/", (req, res) => {
+//   res.send("Hello nama saya shafa!");
+// });
 
-app.get("/coba", (req, res) => {
-  res.status(401).send("Error nya 401!!!");
-});
+// app.get("/say/:greeting", (req, res) => {
+//   const { greeting } = req.params;
+//   res.send(greeting);
+// });
 
-app.listen(3000);
+// app.get("/login/:name", (req, res) => {
+//   const { name } = req.params;
+//   res.send(`Welcome Back ${name}!!`);
+// });
+
+// app.get("/coba", (req, res) => {
+//   res.status(401).send("Error nya 401!!!");
+// });
+
+// app.listen(3000, () => {
+//   console.log("Server jalan di http:localhost:3000");
+// });
