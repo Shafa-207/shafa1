@@ -35,7 +35,7 @@ app.use("/notes", noteRouter);
 const password = "shafapassword";
 const url = `mongodb+srv://shafa_db_user:${password}@shafa-cluster0.ovodjwg.mongodb.net/shafa_notes?retryWrites=true&w=majority&appName=Shafa-Cluster0`;
 mongoose
-  .connect(url)
+  .connect(url, { serverSelectionTimeoutMS: 5000 })
   .then(() => console.log("Terhubung ke MongoDB..."))
   .catch((err) => console.error("Gagal koneksi:", err));
 
@@ -48,7 +48,11 @@ app.use((req, res, next) => {
 });
 
 app.use((err, req, res, next) => {
-  res.send("Error Occurred");
+  // Ini akan menampilkan pesan error aslinya di Postman/Browser
+  res.status(500).json({
+    message: "Ada yang salah nih!",
+    error: err.message,
+  });
 });
 app.listen(3000, () => {
   console.log("Server jalan di http:localhost:3000");
