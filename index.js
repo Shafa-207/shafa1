@@ -16,11 +16,9 @@ mongoose
   .then(() => console.log("Terhubung ke MongoDB..."))
   .catch((err) => console.error("Gagal koneksi:", err));
 
-app.listen(3000, () => {
-  console.log("Server jalan di http:localhost:3000");
-});
-
-// Post sekarang tersedia untuk digunakan
+// app.listen(3000, () => {
+//   console.log("Server jalan di http:localhost:3000");
+// });
 
 // app.use((req, res, next) => {
 //   if (false) {
@@ -52,6 +50,6 @@ app.listen(3000, () => {
 //   res.status(401).send("Error nya 401!!!");
 // });
 
-// app.listen(3000, () => {
-//   console.log("Server jalan di http:localhost:3000");
-// });
+app.listen(3000, () => {
+  console.log("Server jalan di http:localhost:3000");
+});
