@@ -10,7 +10,7 @@ app.use(express.json());
 app.use("/notes", noteRouter);
 
 const password = "shafapassword";
-const url = `mongodb+srv://shafa_db_user:${password}@shafa-cluster0.ovodjwg.mongodb.net/?appName=Shafa-Cluster0`;
+const url = `mongodb+srv://shafa_db_user:${password}@shafa-cluster0.ovodjwg.mongodb.net/shafa_notes?retryWrites=true&w=majority&appName=Shafa-Cluster0`;
 mongoose
   .connect(url)
   .then(() => console.log("Terhubung ke MongoDB..."))
