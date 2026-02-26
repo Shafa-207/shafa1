@@ -16,18 +16,6 @@ app.get("/", (req, res) => {
 //   console.log("Server jalan di http:localhost:3000");
 // });
 
-app.use((req, res, next) => {
-  if (false) {
-    next(new Error("salah"));
-    return;
-  }
-  next();
-});
-
-app.use((err, req, res, next) => {
-  res.send("Error Occurred");
-});
-
 app.get("/say/:greeting", (req, res) => {
   const { greeting } = req.params;
   res.send(greeting);
@@ -51,6 +39,17 @@ mongoose
   .then(() => console.log("Terhubung ke MongoDB..."))
   .catch((err) => console.error("Gagal koneksi:", err));
 
+app.use((req, res, next) => {
+  if (false) {
+    next(new Error("salah"));
+    return;
+  }
+  next();
+});
+
+app.use((err, req, res, next) => {
+  res.send("Error Occurred");
+});
 app.listen(3000, () => {
   console.log("Server jalan di http:localhost:3000");
 });
