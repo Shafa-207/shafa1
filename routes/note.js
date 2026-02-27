@@ -39,9 +39,9 @@ router.get("/:id", async (req, res, next) => {
 
 // POST: Tambah data baru ke MongoDB
 router.post("/", async (req, res, next) => {
-  const { title, content } = req.body;
+  const { title, content, author } = req.body;
   try {
-    const note = await Post.create({ title, content });
+    const note = await Post.create({ title, content, author });
     res.status(201).json(note);
   } catch (e) {
     next(e);
