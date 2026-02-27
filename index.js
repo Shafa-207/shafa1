@@ -4,17 +4,16 @@ import noteRouter from "./routes/note.js";
 import mongoose from "mongoose";
 import { Post } from "./models/index.js";
 
+import cors from "cors";
+
 // const express = require("express");
 const app = express();
+app.use(cors());
 app.use(express.json());
 
 app.get("/", (req, res) => {
   res.send("Hello nama saya shafa!");
 });
-
-// app.listen(3000, () => {
-//   console.log("Server jalan di http:localhost:3000");
-// });
 
 app.get("/say/:greeting", (req, res) => {
   const { greeting } = req.params;
@@ -39,6 +38,16 @@ mongoose
   .then(() => console.log("Terhubung ke MongoDB..."))
   .catch((err) => console.error("Gagal koneksi:", err));
 
+app.get("/api/posts", async (req, res) => {
+  try {
+    // Post.find() akan mengambil semua isi database kamu
+    const data = await Post.find();
+    res.json(data); // Kirim ke React dalam format JSON
+  } catch (error) {
+    res.status(500).json({ message: "Error ambil data", error });
+  }
+});
+
 app.use((req, res, next) => {
   if (false) {
     next(new Error("salah"));
@@ -54,6 +63,7 @@ app.use((err, req, res, next) => {
     error: err.message,
   });
 });
-app.listen(3000, () => {
-  console.log("Server jalan di http:localhost:3000");
+
+app.listen(5000, () => {
+  console.log("Server jalan di http://localhost:5000");
 });
