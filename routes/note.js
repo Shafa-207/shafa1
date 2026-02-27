@@ -50,14 +50,14 @@ router.post("/", async (req, res, next) => {
 
 // Route PUT: Kalo kita mau ngubah ISI data di MongoDB
 router.put("/:id", async (req, res, next) => {
-  const { title, content } = req.body;
+  const { title, content, author } = req.body;
 
   try {
     // 1. Ambil ID dari URL (req.params.id) - ID MongoDB itu String, bukan Number
     // 2. Gunakan findByIdAndUpdate untuk mencari & mengubah data sekaligus
     const updatedNote = await Post.findByIdAndUpdate(
       req.params.id,
-      { title, content }, // Data baru yang mau dimasukkan
+      { title, content, author }, // Data baru yang mau dimasukkan
       { new: true, runValidators: true }, // Opsi: 'new' supaya dia balikin data yang SUDAH diupdate
     );
 
