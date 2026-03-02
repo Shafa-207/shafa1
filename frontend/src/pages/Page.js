@@ -9,10 +9,12 @@ const Container = styled.div`
   align-items: stretch;
   height: 100vh;
   justify-content: flex-start;
+  & > :first-child {
+    align-self: center; /* Hanya anak pertama yang ke tengah */
+  }
 `;
 
 export default function Page(props) {
-  // const url = "https://www.raquella.web.id/notes/";
   const { uri } = props;
   const url = uri;
 
@@ -36,7 +38,7 @@ export default function Page(props) {
       }
     };
     ambilData();
-  }, [uri]);
+  }, [url]);
 
   // 3. Fungsi Tambah Data (POST)
   const simpanData = async (e) => {

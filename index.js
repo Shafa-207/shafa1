@@ -3,6 +3,7 @@ import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
 import noteRouter from "./routes/note.js";
+import userRouter from "./routes/user.js";
 import { Post } from "./models/index.js";
 
 const app = express();
@@ -30,6 +31,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/notes", noteRouter);
+app.use("/user", userRouter);
 
 app.get("/api/posts", async (req, res) => {
   try {
