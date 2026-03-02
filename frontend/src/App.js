@@ -1,6 +1,7 @@
 import "./App.css";
 import Page from "./pages/Page";
-import { Routes, Route } from "react-router-dom";
+import SignUp from "./pages/SignUp";
+import { Routes, Route, Outlet } from "react-router-dom";
 import styled from "styled-components";
 import SideBar from "./MyComponents/SideBar";
 
@@ -15,27 +16,37 @@ const ContentArea = styled.main`
   min-height: 100vh;
 `;
 
+const LayoutDenganSidebar = ({ uri }) => (
+  <MainLayout>
+    <SideBar uri={uri} />
+    <ContentArea>
+      {/* Outlet adalah tempat halaman (Page) akan muncul */}
+      <Outlet />
+    </ContentArea>
+  </MainLayout>
+);
+
 function App() {
   const uri = [
     "https://www.shafalk.web.id/notes/",
     "https://www.raquella.web.id/notes/",
   ];
   return (
-    <MainLayout>
-      <SideBar uri={uri} />
-      <ContentArea>
-        <Routes>
-          <Route path="/" element={<h1>Selamat Datang!</h1>} />
-          {uri.map((item, index) => (
-            <Route
-              key={index}
-              path={`/page${index + 1}`}
-              element={<Page key={item} uri={item} />}
-            />
-          ))}
-        </Routes>
-      </ContentArea>
-    </MainLayout>
+    <Routes>
+      {/* Halaman Tanpa Sidebar */}
+      <Route path="/register" element={<SignUp />} />
+
+      {/* Halaman Dengan Sidebar (Membungkus Page) */}
+      <Route element={<LayoutDenganSidebar uri={uri} />}>
+        {uri.map((item, index) => (
+          <Route
+            key={index}
+            path={`/page${index + 1}`}
+            element={<Page key={item} uri={item} />}
+          />
+        ))}
+      </Route>
+    </Routes>
   );
 }
 
