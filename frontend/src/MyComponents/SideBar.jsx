@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { NavLink } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const SidebarContainer = styled.nav`
   width: 240px;
@@ -40,14 +41,30 @@ const MenuLink = styled(NavLink)`
     border-right: 4px solid #fff;
   }
 `;
+const Button = styled.button`
+  margin-top: auto;
+  margin-bottom: 50px;
+  background-color: #8ed0eb;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+`;
 
 export default function Sidebar(props) {
   const { uri } = props;
   const url = uri;
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    return navigate("/");
+  };
+
   return (
     <SidebarContainer>
       <Logo>Shafa App</Logo>
-      <MenuLink to="/">Welcome</MenuLink>
       {url.length > 0 ? (
         url.map((item, index) => (
           <MenuLink key={index} to={`/page${index + 1}`}>
@@ -57,6 +74,8 @@ export default function Sidebar(props) {
       ) : (
         <p>Tidak ada url yang diberikan...</p>
       )}
+
+      <Button onClick={handleClick}>Logout</Button>
     </SidebarContainer>
   );
 }

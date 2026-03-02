@@ -34,7 +34,7 @@ function App() {
   return (
     <Routes>
       {/* Halaman Tanpa Sidebar */}
-      <Route path="/register" element={<SignUp />} />
+      <Route path="/" element={<SignUp />} />
 
       {/* Halaman Dengan Sidebar (Membungkus Page) */}
       <Route element={<LayoutDenganSidebar uri={uri} />}>

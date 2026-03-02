@@ -7,31 +7,9 @@ const router = Router();
 // Route GET: untuk melihat isi file JSON nyaaaa
 router.get("/", async (req, res, next) => {
   try {
-    const user = await User.find(); // find() adalah fungsi Mongoose untuk ambil semua
+    const user = await User.find().select("-password"); // find() adalah fungsi Mongoose untuk ambil semua
     res.json(user);
   } catch (e) {
-    next(e);
-  }
-});
-
-// Route Detail (GET)
-router.get("/:id", async (req, res, next) => {
-  try {
-    // 1. Ambil ID dari URL (req.params.id)
-    // 2. Cari dokumennya di MongoDB pakai Post.findById
-    const user = await User.findById(req.params.id);
-
-    // 3. Jika datanya tidak ada di database
-    if (!user) {
-      return res
-        .status(404)
-        .json({ message: "User tidak ditemukan di MongoDB" });
-    }
-
-    // 4. Kirim hasilnya ke Postman
-    res.json(user);
-  } catch (e) {
-    // Jika ID yang dimasukkan formatnya salah (bukan ObjectId MongoDB)
     next(e);
   }
 });
@@ -80,15 +58,14 @@ router.post("/login", async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    const user = await User.findOne({ email: email });
+    const user = await User.findOne({ email });
 
     if (!user) {
       return res.status(404).json({ message: "Email tidak ditemukan" });
     }
 
-    // --- PERBAIKAN DI SINI ---
     // Gunakan bcrypt.compare untuk mengecek password terenkripsi
-    const isMatch = await bcrypt.compare(password, user.password);
+    const isMatch = bcrypt.compare(password, user.password);
 
     if (!isMatch) {
       return res.status(401).json({ message: "Password salah" });

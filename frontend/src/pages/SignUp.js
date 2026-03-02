@@ -9,6 +9,8 @@ const Container = styled.div`
   align-items: center;
   justify-content: center;
   gap: 20px;
+  min-height: 100vh;
+  width: 100%;
 `;
 const Form = styled.form`
   display: flex;
@@ -40,11 +42,23 @@ export default function SignUp() {
         return;
       }
       try {
-        await axios.post(`${url}register`, post);
-        alert("Berhasil Daftar!");
-        navigate("/page1");
+        const response = await axios.post(`${url}register`, post);
+        // Cek status HTTP-nya, bukan isi propertinya
+        if (response.status === 200) {
+          localStorage.setItem("token", "dummy-token-dulu"); // Nanti kita bahas cara dapat token asli
+          localStorage.setItem("user", JSON.stringify(response.data));
+          navigate("/page1");
+          alert("Berhasil Daftar!");
+          navigate("/page1");
+          setStatus(false);
+          // Bersihkan form setelah sukses daftar
+          setPost({ email: "", name: "", password: "" });
+          setconPass("");
+        }
       } catch (err) {
-        alert("Gagal daftar!");
+        const errorMessage = err.response?.data?.message || "Gagal mendaftar!";
+        alert(errorMessage);
+        // Sekarang alert akan muncul: "Email ini sudah terdaftar!" bukan cuma "Gagal daftar!"
       }
     } else {
       // LOGIKA LOGIN (Perbaikan)
@@ -58,11 +72,18 @@ export default function SignUp() {
         if (response.data.success) {
           alert("Login Berhasil!");
           navigate("/page1");
+          // Bersihkan form setelah sukses daftar
+          setPost({ email: "", name: "", password: "" });
+          setconPass("");
         } else {
           alert("Email atau Password salah!");
         }
       } catch (err) {
-        alert("Login Gagal! Cek koneksi atau data anda.");
+        const errorMessage =
+          err.response?.data?.message ||
+          "Login Gagal! Cek koneksi atau data anda.";
+        alert(errorMessage);
+        // Sekarang alert akan muncul: "Email ini sudah terdaftar!" bukan cuma "Gagal daftar!"
       }
     }
   };
@@ -84,13 +105,36 @@ export default function SignUp() {
           placeholder="Email"
           value={post.email}
           onChange={(e) => setPost({ ...post, email: e.target.value })}
+          pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
         />
+        {/* Tips: Kasih instruksi ke user
+        <ul style={{ fontSize: "12px", color: "#666", textAlign: "left" }}>
+          <li style={{ color: /[A-Z]/.test(post.password) ? "green" : "red" }}>
+            Minimal 1 Huruf Kapital
+          </li>
+          <li style={{ color: /[0-9]/.test(post.password) ? "green" : "red" }}>
+            Minimal 1 Angka
+          </li>
+          <li
+            style={{
+              color: /[!@#$%^&*]/.test(post.password) ? "green" : "red",
+            }}
+          >
+            Minimal 1 Simbol (!@#$)
+          </li>
+          <li style={{ color: post.password.length >= 8 ? "green" : "red" }}>
+            Minimal 8 Karakter
+          </li>
+        </ul> */}
         <input
           type="password"
           placeholder="Password"
           value={post.password}
           onChange={(e) => setPost({ ...post, password: e.target.value })}
+          pattern="(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*]).{8,16}"
+          title="Wajib: 1 Huruf Besar, 1 Huruf Kecil, 1 Angka, dan 1 Simbol (!@#$%^&*._-)"
         />
+
         {status === true ? (
           <input
             type="password"
