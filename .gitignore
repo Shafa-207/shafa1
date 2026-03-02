@@ -1,0 +1,12 @@
+# Folder dependency
+node_modules/
+
+# File rahasia (Sangat Penting!)
+.env
+
+# Log file
+npm-debug.log*
+yarn-error.log*
+
+# OS metadata
+.DS_Store

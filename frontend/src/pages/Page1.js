@@ -12,7 +12,7 @@ const Container = styled.div`
 `;
 
 export default function Page1() {
-  const url = "https://www.shafalk.web.id/notes/";
+  const url = "https://www.raquella.web.id/notes/";
 
   // 1. Taruh semua State di atas
   const [posts, setPosts] = useState([]);
