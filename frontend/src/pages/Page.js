@@ -6,13 +6,15 @@ import React, { useState, useEffect } from "react";
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: stretch;
   height: 100vh;
   justify-content: flex-start;
 `;
 
-export default function Page1() {
-  const url = "https://www.raquella.web.id/notes/";
+export default function Page(props) {
+  // const url = "https://www.raquella.web.id/notes/";
+  const { uri } = props;
+  const url = uri;
 
   // 1. Taruh semua State di atas
   const [posts, setPosts] = useState([]);
@@ -34,7 +36,7 @@ export default function Page1() {
       }
     };
     ambilData();
-  }, []);
+  }, [uri]);
 
   // 3. Fungsi Tambah Data (POST)
   const simpanData = async (e) => {

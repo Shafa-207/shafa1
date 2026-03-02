@@ -41,12 +41,22 @@ const MenuLink = styled(NavLink)`
   }
 `;
 
-export default function Sidebar() {
+export default function Sidebar(props) {
+  const { uri } = props;
+  const url = uri;
   return (
     <SidebarContainer>
       <Logo>Shafa App</Logo>
       <MenuLink to="/">Welcome</MenuLink>
-      <MenuLink to="/page1">Page 1</MenuLink>
+      {url.length > 0 ? (
+        url.map((item, index) => (
+          <MenuLink key={index} to={`/page${index + 1}`}>
+            Page {index + 1}
+          </MenuLink>
+        ))
+      ) : (
+        <p>Tidak ada url yang diberikan...</p>
+      )}
     </SidebarContainer>
   );
 }

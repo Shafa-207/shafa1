@@ -8,10 +8,21 @@ import { Post } from "./models/index.js";
 const app = express();
 const port = process.env.PORT || 5000;
 const uri = process.env.MONGODB_URI;
+console.log("Cek URI:", uri ? "Ada isinya" : "KOSONG/UNDEFINED!");
 
 // 2. Middlewares
 app.use(cors());
 app.use(express.json());
+
+// // Di file backend kamu
+// const allowedOrigins = [
+//   'http://localhost:3000', // Supaya masih bisa dicoba di laptop
+//   'https://shafa-notes-kamu.vercel.app' // Alamat frontend kamu yang sudah online
+// ];
+
+// app.use(cors({
+//   origin: allowedOrigins
+// }))
 
 // 3. Routes
 app.get("/", (req, res) => {

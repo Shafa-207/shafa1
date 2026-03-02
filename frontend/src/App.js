@@ -1,5 +1,5 @@
 import "./App.css";
-import Page1 from "./pages/Page1";
+import Page from "./pages/Page";
 import { Routes, Route } from "react-router-dom";
 import styled from "styled-components";
 import SideBar from "./MyComponents/SideBar";
@@ -16,13 +16,23 @@ const ContentArea = styled.main`
 `;
 
 function App() {
+  const uri = [
+    "https://www.shafalk.web.id/notes/",
+    "https://www.raquella.web.id/notes/",
+  ];
   return (
     <MainLayout>
-      <SideBar />
+      <SideBar uri={uri} />
       <ContentArea>
         <Routes>
           <Route path="/" element={<h1>Selamat Datang!</h1>} />
-          <Route path="/page1" element={<Page1 />} />
+          {uri.map((item, index) => (
+            <Route
+              key={index}
+              path={`/page${index + 1}`}
+              element={<Page key={item} uri={item} />}
+            />
+          ))}
         </Routes>
       </ContentArea>
     </MainLayout>
