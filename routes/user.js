@@ -41,11 +41,21 @@ router.post("/register", async (req, res, next) => {
   const { email, name, password } = req.body;
 
   try {
-    // 2. Acak password (hashing)
-    // Angka 10 adalah 'saltRounds' (semakin tinggi semakin aman tapi lambat)
+    // 1. Validasi: Pastikan semua field diisi
+    if (!email || !name || !password) {
+      return res.status(400).json({ message: "Semua data harus diisi!" });
+    }
+
+    // 2. Cek apakah email sudah terdaftar (Biar error-nya gak generic)
+    const userExist = await User.findOne({ email });
+    if (userExist) {
+      return res.status(400).json({ message: "Email ini sudah terdaftar!" });
+    }
+
+    // 3. Hashing password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // 3. Simpan user dengan password yang SUDAH DI-HASH
+    // 4. Create User
     const user = await User.create({
       email,
       name,
@@ -58,7 +68,6 @@ router.post("/register", async (req, res, next) => {
         id: user._id,
         name: user.name,
         email: user.email,
-        // Jangan balikin password (walaupun sudah dihash) ke respon JSON demi keamanan
       },
     });
   } catch (e) {
