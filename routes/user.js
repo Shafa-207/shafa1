@@ -18,7 +18,7 @@ router.post("/login", async (req, res) => {
     }
 
     // WAJIB pakai await di sini!
-    const isMatch = await bcrypt.compare(password, user.password);
+    const isMatch = bcrypt.compare(password, user.password);
 
     if (!isMatch) {
       return res.status(401).json({ message: "Password salah" });
@@ -93,6 +93,21 @@ router.get("/", async (req, res, next) => {
   try {
     const users = await User.find().select("-password");
     res.json(users);
+  } catch (e) {
+    next(e);
+  }
+});
+
+// --- ROUTE GET ALL USERS (Sekarang Pakai Proteksi Token) ---
+router.get("/get", verifyToken, async (req, res, next) => {
+  try {
+    // Hanya user yang punya token valid yang bisa sampai ke sini
+    const users = await User.find().select("-password");
+    res.json({
+      success: true,
+      count: users.length,
+      data: users,
+    });
   } catch (e) {
     next(e);
   }
