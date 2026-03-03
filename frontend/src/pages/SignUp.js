@@ -98,8 +98,8 @@ export default function SignUp() {
           placeholder="Email"
           value={post.email}
           onChange={(e) => setPost({ ...post, email: e.target.value })}
-          pattern="[a-z0-9._%+-]+@[a-z0-9-]+\.[a-z]{2,4}"
-          required
+          // pattern="[a-z0-9._%+-]+@[a-z0-9-]+\.[a-z]{2,4}"
+          // required
         />
         {/* Tips: Kasih instruksi ke user
         <ul style={{ fontSize: "12px", color: "#666", textAlign: "left" }}>
@@ -126,9 +126,9 @@ export default function SignUp() {
           value={post.password}
           onChange={(e) => setPost({ ...post, password: e.target.value })}
           // Perbaikan: Tambah .* di akhir agar panjang karakter terhitung dengan benar
-          pattern="(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*]).{8,}"
-          title="Minimal 8 karakter: Wajib 1 Huruf Besar, 1 Huruf Kecil, 1 Angka, dan 1 Simbol (!@#$%^&*)"
-          required
+          // pattern="(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*]).{8,}"
+          // title="Minimal 8 karakter: Wajib 1 Huruf Besar, 1 Huruf Kecil, 1 Angka, dan 1 Simbol (!@#$%^&*)"
+          // required
         />
 
         {status === true ? (
@@ -137,7 +137,7 @@ export default function SignUp() {
             placeholder="Confirm Password"
             value={conPass}
             onChange={(e) => setconPass(e.target.value)}
-            required
+            // required
           />
         ) : null}
 

@@ -1,6 +1,6 @@
 import { Router } from "express";
 import jwt from "jsonwebtoken";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import { User } from "../models/index.js";
 import { verifyToken } from "../middleware/auth.js"; // Pastikan path dan ekstensi .js benar
 import { iat_check } from "../middleware/iat_check.js";
