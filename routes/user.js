@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { User } from "../models/index.js";
 import { verifyToken } from "../middleware/auth.js"; // Pastikan path dan ekstensi .js benar
+import { iat_check } from "../middleware/iat_check.js";
 
 const router = Router();
 
@@ -18,7 +19,7 @@ router.post("/login", async (req, res) => {
     }
 
     // WAJIB pakai await di sini!
-    const isMatch = bcrypt.compare(password, user.password);
+    const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
       return res.status(401).json({ message: "Password salah" });
@@ -27,8 +28,8 @@ router.post("/login", async (req, res) => {
     // BUAT TOKEN JWT
     const token = jwt.sign(
       { id: user._id, email: user.email }, // Payload
-      process.env.JWT_SECRET || "rahasia_kamu", // Secret Key
-      { expiresIn: "1d" }, // Masa berlaku token
+      process.env.JWT_SECRET, // Secret Key
+      { expiresIn: "1h" }, // Masa berlaku token
     );
 
     res.status(200).json({
@@ -67,8 +68,8 @@ router.post("/register", async (req, res, next) => {
 
     const token = jwt.sign(
       { id: user._id, email: user.email },
-      process.env.JWT_SECRET || "rahasia_kamu",
-      { expiresIn: "1d" },
+      process.env.JWT_SECRET,
+      { expiresIn: "1h" },
     );
 
     res.status(201).json({
@@ -88,18 +89,18 @@ router.get("/profile", verifyToken, (req, res) => {
   res.json({ message: "Halo!", user: req.user });
 });
 
-// --- ROUTE GET ALL USERS (Tanpa Password) ---
-router.get("/", async (req, res, next) => {
-  try {
-    const users = await User.find().select("-password");
-    res.json(users);
-  } catch (e) {
-    next(e);
-  }
-});
+// // --- ROUTE GET ALL USERS (Tanpa Password) ---
+// router.get("/", async (req, res, next) => {
+//   try {
+//     const users = await User.find().select("-password");
+//     res.json(users);
+//   } catch (e) {
+//     next(e);
+//   }
+// });
 
 // --- ROUTE GET ALL USERS (Sekarang Pakai Proteksi Token) ---
-router.get("/get", verifyToken, async (req, res, next) => {
+router.get("/", [verifyToken, iat_check], async (req, res, next) => {
   try {
     // Hanya user yang punya token valid yang bisa sampai ke sini
     const users = await User.find().select("-password");
