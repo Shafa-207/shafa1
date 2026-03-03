@@ -20,6 +20,7 @@ const Form = styled.form`
 
 export default function SignUp() {
   const url = "https://www.shafalk.web.id/user/";
+  // const url = "http://localhost:5000/user/";
 
   const [post, setPost] = useState({
     email: "",
@@ -97,7 +98,8 @@ export default function SignUp() {
           placeholder="Email"
           value={post.email}
           onChange={(e) => setPost({ ...post, email: e.target.value })}
-          pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
+          pattern="[a-z0-9._%+-]+@[a-z0-9-]+\.[a-z]{2,4}"
+          required
         />
         {/* Tips: Kasih instruksi ke user
         <ul style={{ fontSize: "12px", color: "#666", textAlign: "left" }}>
@@ -123,8 +125,10 @@ export default function SignUp() {
           placeholder="Password"
           value={post.password}
           onChange={(e) => setPost({ ...post, password: e.target.value })}
-          pattern="(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*]).{8,16}"
-          title="Wajib: 1 Huruf Besar, 1 Huruf Kecil, 1 Angka, dan 1 Simbol (!@#$%^&*._-)"
+          // Perbaikan: Tambah .* di akhir agar panjang karakter terhitung dengan benar
+          pattern="(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*]).{8,}"
+          title="Minimal 8 karakter: Wajib 1 Huruf Besar, 1 Huruf Kecil, 1 Angka, dan 1 Simbol (!@#$%^&*)"
+          required
         />
 
         {status === true ? (
@@ -133,6 +137,7 @@ export default function SignUp() {
             placeholder="Confirm Password"
             value={conPass}
             onChange={(e) => setconPass(e.target.value)}
+            required
           />
         ) : null}
 
