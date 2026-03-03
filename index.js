@@ -51,9 +51,11 @@ mongoose
 
 // 5. Error Handling Middleware (Selalu di akhir)
 app.use((err, req, res, next) => {
+  console.error("DETAIL ERROR DI SERVER:", err); // Ini akan muncul di Dashboard Logs Vercel
   res.status(500).json({
     message: "Ada yang salah nih!",
     error: err.message,
+    stack: err.stack, // Tambahkan ini sementara untuk melihat baris kode mana yang rusak
   });
 });
 
