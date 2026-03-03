@@ -2,8 +2,10 @@ import { Router } from "express";
 // Wajib pakai ekstensi .js di akhir path
 // import * as Note from "../models/note.js";
 import { Post } from "../models/index.js";
+import { verifyToken } from "../middleware/auth.js";
 
 const router = Router();
+router.use(verifyToken);
 
 // Route GET: untuk melihat isi file JSON nyaaaa
 router.get("/", async (req, res, next) => {

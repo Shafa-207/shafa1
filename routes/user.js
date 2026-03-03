@@ -100,7 +100,7 @@ router.get("/profile", verifyToken, (req, res) => {
 // });
 
 // --- ROUTE GET ALL USERS (Sekarang Pakai Proteksi Token) ---
-router.get("/", [verifyToken, iat_check], async (req, res, next) => {
+router.get("/", verifyToken, async (req, res, next) => {
   try {
     // Hanya user yang punya token valid yang bisa sampai ke sini
     const users = await User.find().select("-password");
