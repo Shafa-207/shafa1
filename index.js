@@ -60,3 +60,6 @@ app.use((err, req, res, next) => {
 app.listen(port, () => {
   console.log(`Server jalan di http://localhost:${port}`);
 });
+
+// TAMBAHKAN INI DI BARIS PALING AKHIR:
+export default app;
