@@ -1,3 +1,11 @@
+import { Router } from "express";
+import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
+import { User } from "../models/index.js";
+import { verifyToken } from "../middleware/auth.js"; // Pastikan path dan ekstensi .js benar
+
+const router = Router();
+
 // --- ROUTE LOGIN ---
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;
@@ -20,13 +28,13 @@ router.post("/login", async (req, res) => {
     const token = jwt.sign(
       { id: user._id, email: user.email }, // Payload
       process.env.JWT_SECRET || "rahasia_kamu", // Secret Key
-      { expiresIn: "1d" }, // Masa berlaku
+      { expiresIn: "1d" }, // Masa berlaku token
     );
 
     res.status(200).json({
       success: true,
       message: "Login Berhasil",
-      token: token, // TOKEN WAJIB DIKIRIM KE FRONTEND
+      token: token,
       user: { id: user._id, name: user.name, email: user.email },
     });
   } catch (err) {
@@ -36,7 +44,7 @@ router.post("/login", async (req, res) => {
   }
 });
 
-// --- ROUTE REGISTER (Updated with Token) ---
+// --- ROUTE REGISTER ---
 router.post("/register", async (req, res, next) => {
   const { email, name, password } = req.body;
   try {
@@ -57,7 +65,6 @@ router.post("/register", async (req, res, next) => {
       password: hashedPassword,
     });
 
-    // BUAT TOKEN langsung setelah register berhasil
     const token = jwt.sign(
       { id: user._id, email: user.email },
       process.env.JWT_SECRET || "rahasia_kamu",
@@ -65,9 +72,9 @@ router.post("/register", async (req, res, next) => {
     );
 
     res.status(201).json({
-      success: true, // Tambahkan ini agar konsisten dengan login
+      success: true,
       message: "User berhasil didaftarkan",
-      token: token, // Kirim token ke frontend
+      token: token,
       user: { id: user._id, name: user.name, email: user.email },
     });
   } catch (e) {
@@ -75,15 +82,17 @@ router.post("/register", async (req, res, next) => {
   }
 });
 
-// --- ROUTE LAINNYA ---
+// --- ROUTE PROTECTED ---
 router.get("/profile", verifyToken, (req, res) => {
+  // Data user didapat dari middleware verifyToken (req.user = decoded)
   res.json({ message: "Halo!", user: req.user });
 });
 
+// --- ROUTE GET ALL USERS (Tanpa Password) ---
 router.get("/", async (req, res, next) => {
   try {
-    const user = await User.find().select("-password");
-    res.json(user);
+    const users = await User.find().select("-password");
+    res.json(users);
   } catch (e) {
     next(e);
   }
