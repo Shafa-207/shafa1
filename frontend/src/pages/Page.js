@@ -2,6 +2,7 @@ import TrackCard from "../MyComponents/TrackCard";
 import styled from "styled-components";
 import axios from "axios";
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Container = styled.div`
   display: flex;
@@ -10,7 +11,7 @@ const Container = styled.div`
   height: 100vh;
   justify-content: flex-start;
   & > :first-child {
-    align-self: center; /* Hanya anak pertama yang ke tengah */
+    align-self: center;
   }
 `;
 
@@ -18,45 +19,66 @@ export default function Page(props) {
   const { uri } = props;
   const url = uri;
 
-  // 1. Taruh semua State di atas
+  // 1. States
   const [posts, setPosts] = useState([]);
   const [newPost, setNewPost] = useState({
     title: "",
     content: "",
     author: "",
   });
-  const [editId, setEditId] = useState(null); // Menyimpan ID data yang akan di-update
+  const [editId, setEditId] = useState(null);
+  const navigate = useNavigate();
 
-  // 2. Fungsi Ambil Data (GET)
+  // EFFECT 1: Cek Login (Proteksi)
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("Kamu harus login dulu!");
+      navigate("/");
+    }
+  }, [navigate]);
+
+  // EFFECT 2: Ambil Data (GET)
   useEffect(() => {
     const ambilData = async () => {
       try {
-        const response = await axios.get(url);
+        const token = localStorage.getItem("token");
+        const response = await axios.get(url, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
         setPosts(response.data);
       } catch (err) {
         console.error("Gagal ambil data:", err);
+        if (err.response?.status === 401) {
+          alert("Sesi habis, silakan login lagi");
+          navigate("/");
+        }
       }
     };
-    ambilData();
-  }, [url]);
 
-  // 3. Fungsi Tambah Data (POST)
+    // Jalankan hanya jika ada token
+    if (localStorage.getItem("token")) {
+      ambilData();
+    }
+  }, [url, navigate]);
+
+  // 3. Fungsi Simpan (POST/PUT)
   const simpanData = async (e) => {
     e.preventDefault();
+    const token = localStorage.getItem("token");
+    const config = { headers: { Authorization: `Bearer ${token}` } };
+
     try {
       if (editId) {
-        // MODE PUT (UPDATE)
-        const response = await axios.put(`${url}${editId}`, newPost);
+        const response = await axios.put(`${url}${editId}`, newPost, config);
         setPosts(
           posts.map((item) => (item._id === editId ? response.data : item)),
         );
-        setEditId(null); // Selesai edit
+        setEditId(null);
       } else {
-        // MODE POST (CREATE)
-        const response = await axios.post(url, newPost);
+        const response = await axios.post(url, newPost, config);
         setPosts([response.data, ...posts]);
       }
-
       setNewPost({ title: "", content: "", author: "" });
       alert(editId ? "Data diupdate!" : "Data ditambah!");
     } catch (err) {
@@ -64,30 +86,49 @@ export default function Page(props) {
     }
   };
 
+  // 4. Fungsi Hapus
   const hapusData = async (id) => {
     if (window.confirm("Yakin mau hapus catatan ini?")) {
       try {
-        await axios.delete(`${url}${id}`);
-        // Filter state supaya data yang dihapus langsung hilang dari layar
+        const token = localStorage.getItem("token");
+        await axios.delete(`${url}${id}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
         setPosts(posts.filter((item) => item._id !== id));
       } catch (err) {
         console.error("Gagal hapus:", err);
       }
     }
   };
+
+  // 5. Fungsi Edit
   const handleEdit = (item) => {
-    setEditId(item._id); // Tandai bahwa kita sedang mengedit ID ini
+    setEditId(item._id);
     setNewPost({
       title: item.title,
       content: item.content,
       author: item.author,
     });
-    window.scrollTo(0, 0); // Opsional: Scroll ke atas supaya form kelihatan
+    window.scrollTo(0, 0);
+  };
+
+  // 6. Logout (Tambahan biar keren)
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    navigate("/");
   };
 
   return (
     <Container>
-      {/* Form Input Baru */}
+      <button
+        onClick={handleLogout}
+        style={{ alignSelf: "flex-end", margin: "10px" }}
+      >
+        Logout
+      </button>
+
+      <div>Halaman Catatan</div>
       <form
         onSubmit={simpanData}
         style={{
@@ -121,6 +162,7 @@ export default function Page(props) {
         <button type="submit">{editId ? "Update Data" : "Kirim Data"}</button>
         {editId && (
           <button
+            type="button"
             onClick={() => {
               setEditId(null);
               setNewPost({ title: "", content: "", author: "" });
@@ -132,10 +174,9 @@ export default function Page(props) {
       </form>
 
       <hr style={{ width: "100%" }} />
-      {/* 3. Looping data posts */}
+
       {posts.length > 0 ? (
         posts.map((item) => (
-          // Gunakan pembungkus (div) dan pindahkan key ke sini
           <div
             key={item._id}
             style={{ marginBottom: "20px", textAlign: "center" }}
@@ -168,4 +209,4 @@ export default function Page(props) {
       )}
     </Container>
   );
-}
+} // <--- KURUNG TUTUP KOMPONEN HARUS DI SINI

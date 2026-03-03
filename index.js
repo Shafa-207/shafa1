@@ -9,7 +9,8 @@ import { Post } from "./models/index.js";
 const app = express();
 const port = process.env.PORT || 5000;
 const uri = process.env.MONGO_URI;
-console.log("Cek URI:", uri ? "Ada isinya" : "KOSONG/UNDEFINED!");
+console.log("Cek URI:", uri ? "Ada isinya" : "KOSONG/UNDEFINED!"); //cek uri
+console.log("Cek Secret:", process.env.JWT_SECRET ? "Aman" : "KOSONG!"); //cek jwt
 
 // 2. Middlewares
 app.use(cors());

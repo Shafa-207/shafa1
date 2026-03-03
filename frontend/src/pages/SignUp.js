@@ -36,54 +36,46 @@ export default function SignUp() {
     e.preventDefault();
 
     if (status) {
-      // LOGIKA REGISTER (Sudah OK, tinggal rapihkan dikit)
+      // LOGIKA REGISTER
       if (post.password !== conPass) {
         alert("Password tidak cocok!");
         return;
       }
       try {
         const response = await axios.post(`${url}register`, post);
-        // Cek status HTTP-nya, bukan isi propertinya
-        if (response.status === 200) {
-          localStorage.setItem("token", "dummy-token-dulu"); // Nanti kita bahas cara dapat token asli
-          localStorage.setItem("user", JSON.stringify(response.data));
-          navigate("/page1");
+        if (response.status === 201 || response.status === 200) {
+          // Ambil token asli dari backend (asumsi properti namanya 'token')
+          const token = response.data.token;
+
+          localStorage.setItem("token", token);
+          localStorage.setItem("user", JSON.stringify(response.data.user));
+
           alert("Berhasil Daftar!");
           navigate("/page1");
-          setStatus(false);
-          // Bersihkan form setelah sukses daftar
-          setPost({ email: "", name: "", password: "" });
-          setconPass("");
         }
       } catch (err) {
-        const errorMessage = err.response?.data?.message || "Gagal mendaftar!";
-        alert(errorMessage);
-        // Sekarang alert akan muncul: "Email ini sudah terdaftar!" bukan cuma "Gagal daftar!"
+        alert(err.response?.data?.message || "Gagal mendaftar!");
       }
     } else {
-      // LOGIKA LOGIN (Perbaikan)
+      // LOGIKA LOGIN
       try {
-        // Sebaiknya Backend punya endpoint /login
         const response = await axios.post(`${url}login`, {
           email: post.email,
           password: post.password,
         });
 
         if (response.data.success) {
+          // Ambil token asli dari backend
+          const token = response.data.token;
+
+          localStorage.setItem("token", token);
+          localStorage.setItem("user", JSON.stringify(response.data.user));
+
           alert("Login Berhasil!");
           navigate("/page1");
-          // Bersihkan form setelah sukses daftar
-          setPost({ email: "", name: "", password: "" });
-          setconPass("");
-        } else {
-          alert("Email atau Password salah!");
         }
       } catch (err) {
-        const errorMessage =
-          err.response?.data?.message ||
-          "Login Gagal! Cek koneksi atau data anda.";
-        alert(errorMessage);
-        // Sekarang alert akan muncul: "Email ini sudah terdaftar!" bukan cuma "Gagal daftar!"
+        alert(err.response?.data?.message || "Login Gagal!");
       }
     }
   };
