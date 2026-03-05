@@ -58,8 +58,8 @@ export default function Sidebar(props) {
   const url = uri;
   const navigate = useNavigate();
 
-  const handleClick = () => {
-    return navigate("/");
+  const paymentHandler = () => {
+    return navigate("/payment");
   };
 
   return (
@@ -74,8 +74,7 @@ export default function Sidebar(props) {
       ) : (
         <p>Tidak ada url yang diberikan...</p>
       )}
-
-      <Button onClick={handleClick}>Logout</Button>
+      <Button onClick={paymentHandler}>Payment</Button>
     </SidebarContainer>
   );
 }

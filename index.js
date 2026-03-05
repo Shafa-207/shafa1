@@ -5,6 +5,7 @@ import mongoose from "mongoose";
 import noteRouter from "./routes/note.js";
 import userRouter from "./routes/user.js";
 import authRouter from "./routes/auth.js";
+import paymentRoutes from "./routes/payment.js";
 import { Post } from "./models/index.js";
 
 const app = express();
@@ -35,6 +36,7 @@ app.get("/", (req, res) => {
 app.use("/notes", noteRouter);
 app.use("/user", userRouter);
 app.use("/auth", authRouter);
+app.use("/payment", paymentRoutes);
 
 app.get("/api/posts", async (req, res) => {
   try {

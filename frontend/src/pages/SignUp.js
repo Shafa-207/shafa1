@@ -19,8 +19,8 @@ const Form = styled.form`
 `;
 
 export default function SignUp() {
-  const url = "https://www.shafalk.web.id/user/";
-  // const url = "http://localhost:5000/user/";
+  // const url = "https://www.shafalk.web.id/user/";
+  const url = "http://localhost:5000/user/";
 
   const [post, setPost] = useState({
     email: "",
@@ -83,7 +83,7 @@ export default function SignUp() {
 
   return (
     <Container>
-      <div>Register Page</div>
+      <div>{status ? "Register" : "Login"} Page</div>
       <Form onSubmit={handleAuth}>
         {status === true ? (
           <input

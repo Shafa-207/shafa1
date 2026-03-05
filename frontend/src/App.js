@@ -4,6 +4,7 @@ import SignUp from "./pages/SignUp";
 import { Routes, Route, Outlet } from "react-router-dom";
 import styled from "styled-components";
 import SideBar from "./MyComponents/SideBar";
+import Payment from "./pages/Payment";
 
 const MainLayout = styled.div`
   display: flex;
@@ -35,6 +36,7 @@ function App() {
     <Routes>
       {/* Halaman Tanpa Sidebar */}
       <Route path="/" element={<SignUp />} />
+      <Route path="/payment" element={<Payment />} />
 
       {/* Halaman Dengan Sidebar (Membungkus Page) */}
       <Route element={<LayoutDenganSidebar uri={uri} />}>
