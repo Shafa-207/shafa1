@@ -86,9 +86,9 @@ export const handleNotification = async (req, res) => {
 
 export const checkStatus = async (req, res) => {
   try {
-    const { orderId } = req.params;
+    const { order_id } = req.params;
 
-    const statusResponse = await coreApi.transaction.status(orderId);
+    const statusResponse = await coreApi.transaction.status(order_id);
 
     res.status(200).json({
       order_id: statusResponse.order_id,
